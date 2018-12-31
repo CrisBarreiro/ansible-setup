@@ -1,0 +1,16 @@
+---
+
+- name: Install homeshick with brew
+  homebrew:
+    name: homeshick
+    path: /home/linuxbrew/.linuxbrew/bin
+    state: present
+
+- name: Clone base homeshick repo
+  git: 
+    repo: "git@github.com:ontherunvaro/hsh-master.git"
+    dest: "{{ ansible_env.HOME }}/.homesick/repos/hsh-master"
+    accept_hostkey: yes
+
+- name: Link base homeshick repo
+  shell: "{{ linuxbrew_bin_path }}/homeshick link hsh-master -f"

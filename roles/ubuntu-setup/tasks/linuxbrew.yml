@@ -14,3 +14,8 @@
   args:
     executable: /bin/bash
     stdin: "{{ansible_become_pass}}\n\n"
+
+- name: Set linuxbrew facts
+  set_fact:
+    linuxbrew_path: "/home/linuxbrew/.linuxbrew"
+    linuxbrew_bin_path: "/home/linuxbrew/.linuxbrew/bin"
