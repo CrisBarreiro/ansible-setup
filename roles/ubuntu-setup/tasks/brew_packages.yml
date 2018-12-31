@@ -1,0 +1,14 @@
+---
+
+- name: Install packages with brew (no additional config)
+  homebrew:
+    name: "{{ item }}"
+    path: /home/linuxbrew/.linuxbrew/bin
+    state: present
+  with_items:
+    - antigen
+    - hub
+    - fasd
+    - diff-so-fancy
+  loop_control:
+    label: "{{ item }}"
