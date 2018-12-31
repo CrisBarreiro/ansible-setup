@@ -1,0 +1,16 @@
+---
+
+- name: Ensure linuxbrew dependencies are installed
+  apt:
+    name:
+      - build-essential
+      - curl
+      - file
+      - git
+    state: present
+
+- name: Install linuxbrew using script
+  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+  args:
+    executable: /bin/bash
+    stdin: "{{ansible_become_pass}}\n\n"
