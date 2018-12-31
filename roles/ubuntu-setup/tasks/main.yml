@@ -1,7 +1,6 @@
 ---
 
 - include_tasks: packages.yml
-
 - include_tasks: linuxbrew.yml
-
 - include_tasks: homeshick.yml
+- include_tasks: brew_packages.yml
