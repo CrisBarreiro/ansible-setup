@@ -13,7 +13,7 @@ fi
 # get sudo pass
 read -sp "SUDO password: " SUDO_PASS
 # check if password is correct
-echo $SUDO_PASS | sudo -S echo > /dev/null 2>&1 || ( echo "\nSUDO password incorrect" && exit 1 )
+echo $SUDO_PASS | sudo -S echo > /dev/null 2>&1 || ( echo && echo "SUDO password incorrect" && exit 1 )
 echo
 
 # run playbook
