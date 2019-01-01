@@ -5,3 +5,4 @@
 - include_tasks: homeshick.yml
 - include_tasks: nvm.yml
 - include_tasks: brew_packages.yml
+- include_tasks: extra_packages.yml
