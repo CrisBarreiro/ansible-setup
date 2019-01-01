@@ -17,6 +17,10 @@ echo $SUDO_PASS | sudo -S echo > /dev/null 2>&1 || ( echo && echo "SUDO password
 echo
 
 # run playbook
-ansible-playbook playbook.yml -e "ansible_become_pass=$SUDO_PASS"
+if [ -f playbook.retry ]; then
+    ansible-playbook playbook.yml -e "ansible_become_pass=$SUDO_PASS" --limit @playbook.retry
+else
+    ansible-playbook playbook.yml -e "ansible_become_pass=$SUDO_PASS"
+fi
 
 # sudo cp -r /path/to/ubuntu-setup-ansible/ ansetup && sudo chown -R user:user ansetup && cd ansetup && sudo -K
