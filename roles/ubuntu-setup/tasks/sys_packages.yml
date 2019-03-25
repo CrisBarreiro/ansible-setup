@@ -48,6 +48,7 @@
       - software-properties-common
       - sqlite3
       - unzip
+      - ubuntu-restricted-extras
       - xautomation
       - xclip
       - zip
