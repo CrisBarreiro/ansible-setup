@@ -14,3 +14,5 @@
 
 - name: Link base homeshick repo
   shell: "{{ linuxbrew_bin_path }}/homeshick link {{ homesick_castle_name }} -f"
+  args:
+    creates: "{{ ansible_env.HOME }}/.hsh-linked"
