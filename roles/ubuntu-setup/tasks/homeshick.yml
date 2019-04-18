@@ -8,9 +8,9 @@
 
 - name: Clone base homeshick repo
   git: 
-    repo: "git@github.com:ontherunvaro/hsh-master.git"
-    dest: "{{ ansible_env.HOME }}/.homesick/repos/hsh-master"
+    repo: "{{ homesick_repo }}"
+    dest: "{{ ansible_env.HOME }}/.homesick/repos/{{ homesick_castle_name }}"
     accept_hostkey: yes
 
 - name: Link base homeshick repo
-  shell: "{{ linuxbrew_bin_path }}/homeshick link hsh-master -f"
+  shell: "{{ linuxbrew_bin_path }}/homeshick link {{ homesick_castle_name }} -f"
