@@ -11,10 +11,7 @@ if [ ! -f $HOME/.ssh/id_rsa.pub ]; then
 fi
 
 # run playbook
-if [ -f playbook.retry ]; then
-    ansible-playbook playbook.yml --limit @playbook.retry
-else
-    ansible-playbook playbook.yml
-fi
+ansible-playbook -v playbook.yml
+
 
 # sudo cp -r /path/to/ubuntu-setup-ansible/ ansetup && sudo chown -R user:user ansetup && cd ansetup && sudo -K
