@@ -5,8 +5,11 @@
   args:
     executable: /bin/bash
     stdin: "{{ansible_become_pass}}\n\n"
+    creates: "{{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh"
 
 - name: Install Java
   shell: "source {{ ansible_env.HOME }}/.sdkman/bin/sdkman-init.sh && sdk install java"
   args:
     executable: /bin/bash
+    creates: "{{ ansible_env.HOME }}/.sdkman/candidates/java/current/bin/javac"
+    stdin: "\n\n\n"
