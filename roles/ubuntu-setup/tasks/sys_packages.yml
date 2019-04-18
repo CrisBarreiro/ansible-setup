@@ -45,5 +45,5 @@
       - zlib1g-dev
       - zsh
     state: present
-    update_cache: yes
   become: yes
+  notify: Update and upgrade apt packages
