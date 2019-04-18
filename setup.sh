@@ -11,7 +11,7 @@ if [ ! -f $HOME/.ssh/id_rsa.pub ]; then
 fi
 
 # run playbook
-ansible-playbook -v playbook.yml
+ansible-playbook playbook.yml
 
 
 # sudo cp -r /path/to/ubuntu-setup-ansible/ ansetup && sudo chown -R user:user ansetup && cd ansetup && sudo -K

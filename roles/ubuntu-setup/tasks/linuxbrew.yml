@@ -8,14 +8,19 @@
       - file
       - git
     state: present
+  become: yes
+
+- name: Set linuxbrew facts
+  set_fact:
+    linuxbrew_path: "/home/linuxbrew/.linuxbrew"
+    linuxbrew_bin_path: "/home/linuxbrew/.linuxbrew/bin"
+
+
 
 - name: Install linuxbrew using script
   shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
   args:
     executable: /bin/bash
     stdin: "{{ansible_become_pass}}\n\n"
+    creates: "{{ linuxbrew_bin_path}}/brew"
 
-- name: Set linuxbrew facts
-  set_fact:
-    linuxbrew_path: "/home/linuxbrew/.linuxbrew"
-    linuxbrew_bin_path: "/home/linuxbrew/.linuxbrew/bin"
