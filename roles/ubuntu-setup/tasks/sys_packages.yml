@@ -1,19 +1,9 @@
 ---
 
-- name: Update apt cache
-  apt:
-    update_cache: yes
-  become: yes
-  
 - name: Install aptitude
   apt: 
     name: aptitude
     state: present
-  become: yes
-
-- name: Upgrade apt packages
-  apt:
-    upgrade: safe
   become: yes
 
 - name: Install system packages
