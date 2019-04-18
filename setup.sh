@@ -10,17 +10,11 @@ if [ ! -f $HOME/.ssh/id_rsa.pub ]; then
     exit 1
 fi
 
-# get sudo pass
-read -sp "SUDO password: " SUDO_PASS
-# check if password is correct
-echo $SUDO_PASS | sudo -S echo > /dev/null 2>&1 || ( echo && echo "SUDO password incorrect" && exit 1 )
-echo
-
 # run playbook
 if [ -f playbook.retry ]; then
-    ansible-playbook playbook.yml -e "ansible_become_pass=$SUDO_PASS" --limit @playbook.retry
+    ansible-playbook playbook.yml --limit @playbook.retry
 else
-    ansible-playbook playbook.yml -e "ansible_become_pass=$SUDO_PASS"
+    ansible-playbook playbook.yml
 fi
 
 # sudo cp -r /path/to/ubuntu-setup-ansible/ ansetup && sudo chown -R user:user ansetup && cd ansetup && sudo -K

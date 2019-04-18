@@ -3,3 +3,7 @@
   hosts: localhost
   roles:
     - role: ubuntu-setup
+  vars_prompt:
+    - name: "ansible_become_pass"
+      prompt: "sudo password"
+      private: yes
