@@ -5,3 +5,5 @@ hub_version: "2.11.2"
 
 homesick_repo: "git@gitlab.com:example-user/hsh-master.git"
 homesick_castle_name: "hsh-master"
+
+jetbrains_toolbox_version:  "1.14.5179"
