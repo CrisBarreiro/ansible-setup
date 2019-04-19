@@ -1,7 +1,7 @@
 ---
 
-bat_version: "0.9.0"
-hub_version: "2.7.0"
+bat_version: "0.10.0"
+hub_version: "2.11.2"
 
-homesick_repo: "git@gitlab.com:breyvilas/hsh-master.git"
+homesick_repo: "git@gitlab.com:example-user/hsh-master.git"
 homesick_castle_name: "hsh-master"
