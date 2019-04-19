@@ -6,6 +6,7 @@
     path: /home/linuxbrew/.linuxbrew/bin
     state: present
   loop:
+    - gcc@7
     - antigen
     - diff-so-fancy
     - fasd
