@@ -13,7 +13,6 @@
       - cmake
       - curl
       - git
-      - gnome-tweak-tool
       - gnupg2
       - guake
       - libcurl4-openssl-dev
