@@ -12,6 +12,7 @@
       - build-essential
       - cmake
       - curl
+      - deja-dup
       - git
       - gnupg2
       - guake
