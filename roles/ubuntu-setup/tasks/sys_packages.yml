@@ -10,6 +10,7 @@
   apt:
     name:
       - build-essential
+      - chrome-gnome-shell
       - cmake
       - curl
       - deja-dup
