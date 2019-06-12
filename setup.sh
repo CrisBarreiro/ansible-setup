@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # test if SSH key is present
-if [ ! -f $HOME/.ssh/id_rsa.pub ]; then
+if [ ! -f $HOME/.ssh/id_rsa.pub ] && [ ! -f $HOME/.ssh/id_ecdsa.pub ]; then
     echo "SSH Public Key not found"
     echo "For this setup to work, you need to add a SSH PK and set it up with the homeshick master repo host"
     echo "Here's a command to create it:"
