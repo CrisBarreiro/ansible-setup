@@ -29,6 +29,8 @@
       - libxml2-dev
       - libxslt1-dev
       - libyaml-dev
+      - network-manager-openvpn 
+      - network-manager-openvpn-gnome
       - openssl
       - pinentry-curses
       - python
