@@ -32,6 +32,7 @@
       - network-manager-openvpn 
       - network-manager-openvpn-gnome
       - openssl
+      - pavucontrol
       - pinentry-curses
       - python
       - python-dev
