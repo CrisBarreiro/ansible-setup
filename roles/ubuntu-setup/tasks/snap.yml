@@ -1,0 +1,16 @@
+- name: Install slack
+  snap:
+    name: slack
+    classic: yes
+  become: yes
+
+- name: Install telegram-desktop
+  snap:
+    name: telegram-desktop
+  become: yes
+
+- name: Install code
+  snap:
+    name: code
+    classic: yes
+  become: yes
