@@ -10,3 +10,5 @@
 - include_tasks: sdkman.yml
 - include_tasks: toolbox.yml
 - include_tasks: customization.yml
+
+# Add gnome_packages.yml or plasma_packages.yml depending on your DE
