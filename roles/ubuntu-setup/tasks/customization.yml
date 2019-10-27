@@ -1,16 +1,5 @@
 ---
 
-- name: Install prerequisites
-  apt:
-    name:
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - gnupg2
-      - software-properties-common
-    state: present
-  become: yes
-
 - name: Add repositories
   apt_repository:
     repo: "{{ item }}"
@@ -22,10 +11,6 @@
 - name: Install customization packages
   apt:
     name:
-      - arc-theme
-      - gnome-themes-standard
-      - gnome-tweak-tool
-      - gtk2-engines-murrine
       - paper-icon-theme
     state: present
     update_cache: yes
