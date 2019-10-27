@@ -1,0 +1,17 @@
+---
+
+- name: Add repositories
+  apt_repository:
+    repo: "{{ item }}"
+    state: present
+  become: yes
+  loop:
+    - ppa:papirus/papirus
+
+- name: Install plasma packages
+  apt:
+    name:
+      - materia-kde
+      - yakuake
+    state: present
+  become: yes

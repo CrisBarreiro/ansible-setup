@@ -10,13 +10,11 @@
   apt:
     name:
       - build-essential
-      - chrome-gnome-shell
       - cmake
       - curl
       - deja-dup
       - git
       - gnupg2
-      - guake
       - libcurl4-openssl-dev
       - libcurl4-openssl-dev
       - libffi-dev
@@ -30,7 +28,6 @@
       - libxslt1-dev
       - libyaml-dev
       - network-manager-openvpn 
-      - network-manager-openvpn-gnome
       - openssl
       - pavucontrol
       - pinentry-curses
