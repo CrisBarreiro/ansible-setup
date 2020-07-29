@@ -1,6 +1,6 @@
 ---
 
-bat_version: "0.10.0"
+bat_version: "0.15.4"
 hub_version: "2.11.2"
 
 homesick_repo: "git@gitlab.com:example-user/hsh-master.git"
