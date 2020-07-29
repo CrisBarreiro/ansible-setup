@@ -19,3 +19,9 @@
     name: slack
     classic: yes
   become: yes
+
+- name: Install flutter
+  snap: 
+    name: flutter
+    classic: yes
+  become: yes
