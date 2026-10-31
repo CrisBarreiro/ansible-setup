@@ -32,3 +32,9 @@ workstation_macos_casks:
     app_path: /Applications/Raycast.app
   - name: telegram
     app_path: /Applications/Telegram.app
+  - name: claude
+    app_path: /Applications/Claude.app
+  - name: shottr
+    app_path: /Applications/Shottr.app
+  - name: whatsapp
+    app_path: /Applications/WhatsApp.app
