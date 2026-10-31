@@ -21,4 +21,4 @@ Edit `workstation_shared_packages` in `roles/workstation-setup/defaults/main.yml
 
 Set `workstation_macos_casks` in the same defaults file to choose macOS-only GUI applications installed through Homebrew Cask.
 
-The default macOS applications include Claude, Shottr and WhatsApp, following the apps listed in the [MiSikora dotfiles setup](https://github.com/MiSikora/dotfiles).
+The default macOS applications installed through Homebrew Cask are iTerm2, Visual Studio Code, JetBrains Toolbox, Raycast, Telegram, Claude, Shottr and WhatsApp.
