@@ -20,3 +20,5 @@ The shared Homebrew packages, Homeshick and mise setup run on both platforms. mi
 Edit `workstation_shared_packages` in `roles/workstation-setup/defaults/main.yml` to choose Homebrew formulae installed on both Ubuntu (through Linuxbrew) and macOS. Ubuntu desktop applications are managed through snaps.
 
 Set `workstation_macos_casks` in the same defaults file to choose macOS-only GUI applications installed through Homebrew Cask.
+
+The default macOS applications include Claude, Shottr and WhatsApp, following the apps listed in the [MiSikora dotfiles setup](https://github.com/MiSikora/dotfiles).
