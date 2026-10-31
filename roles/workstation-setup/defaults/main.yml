@@ -1,0 +1,34 @@
+---
+
+bat_version: "0.15.4"
+hub_version: "2.11.2"
+
+homesick_repo: "git@gitlab.com:example-user/hsh-master.git"
+homesick_castle_name: "hsh-master"
+
+jetbrains_toolbox_version:  "1.16.6067"
+
+# Homebrew formulae installed on both Ubuntu (Linuxbrew) and macOS.
+workstation_shared_packages:
+  - gcc
+  - antigen
+  - diff-so-fancy
+  - fzf
+  - gh
+  - mise
+  - scrcpy
+
+workstation_java_version: "17"
+
+# Homebrew casks are macOS-only.
+workstation_macos_casks:
+  - name: iterm2
+    app_path: /Applications/iTerm.app
+  - name: visual-studio-code
+    app_path: /Applications/Visual Studio Code.app
+  - name: jetbrains-toolbox
+    app_path: /Applications/JetBrains Toolbox.app
+  - name: raycast
+    app_path: /Applications/Raycast.app
+  - name: telegram
+    app_path: /Applications/Telegram.app

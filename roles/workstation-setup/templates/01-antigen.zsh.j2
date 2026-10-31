@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+
+# Antigen config
+source "$LINUXBREW_PATH/share/antigen/antigen.zsh"
+
+antigen use oh-my-zsh
+
+antigen bundle zsh-users/zsh-completions
+antigen bundle gradle
+antigen bundle alexrochas/zsh-extract
+antigen bundle fzf
+antigen bundle fasd
+antigen bundle command-not-found
+
+antigen theme romkatv/powerlevel10k
+antigen apply

@@ -21,6 +21,5 @@
   shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
   args:
     executable: /bin/bash
-    stdin: "{{ansible_become_pass}}\n\n"
     creates: "{{ linuxbrew_bin_path}}/brew"
 

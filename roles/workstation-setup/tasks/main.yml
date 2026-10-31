@@ -1,0 +1,80 @@
+- name: Set Homebrew paths
+  set_fact:
+    workstation_brew_prefix: "{{ '/opt/homebrew' if ansible_facts['architecture'] == 'arm64' else '/usr/local' }}"
+    workstation_brew_bin: "{{ '/opt/homebrew/bin' if ansible_facts['architecture'] == 'arm64' else '/usr/local/bin' }}"
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: Set Homebrew executable path
+  set_fact:
+    workstation_brew_bin: "{{ '/home/linuxbrew/.linuxbrew/bin' if ansible_facts['os_family'] == 'Debian' else workstation_brew_bin }}"
+
+- name: Provide the Linuxbrew path expected by existing macOS dotfiles
+  file:
+    src: "{{ workstation_brew_prefix }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.linuxbrew"
+    state: link
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- include_tasks: sys_packages.yml
+  when: ansible_facts['distribution'] == 'Ubuntu'
+
+- include_tasks: linuxbrew.yml
+  when: ansible_facts['os_family'] == 'Debian'
+
+- include_tasks: brew_packages.yml
+- include_tasks: homeshick.yml
+- include_tasks: mise.yml
+
+- include_tasks: snap.yml
+  when: ansible_facts['distribution'] == 'Ubuntu'
+- include_tasks: extra_packages.yml
+  when: ansible_facts['distribution'] == 'Ubuntu'
+- include_tasks: plasma_packages.yml
+  when: ansible_facts['distribution'] == 'Ubuntu'
+- include_tasks: toolbox.yml
+  when: ansible_facts['distribution'] == 'Ubuntu'
+
+- name: Install macOS packages
+  homebrew:
+    name:
+      - bat
+      - cmake
+      - curl
+      - git
+      - gnupg
+      - openssl
+      - pinentry
+      - python
+      - sqlite
+      - unzip
+      - zsh
+      - hub
+    state: present
+    path: "{{ workstation_brew_bin }}"
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: Install macOS applications
+  include_tasks: install_macos_cask.yml
+  loop: "{{ workstation_macos_casks }}"
+  loop_control:
+    loop_var: workstation_cask
+    label: "{{ workstation_cask.name }}"
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: Create iTerm2 dynamic profile directory
+  file:
+    path: "{{ ansible_facts['env']['HOME'] }}/Library/Application Support/iTerm2/DynamicProfiles"
+    state: directory
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: Configure an F12 dropdown window in iTerm2
+  template:
+    src: iterm2-dropdown-profile.json.j2
+    dest: "{{ ansible_facts['env']['HOME'] }}/Library/Application Support/iTerm2/DynamicProfiles/workstation-dropdown.json"
+  when: ansible_facts['os_family'] == 'Darwin'
+
+- name: Set zsh as the current user's default shell
+  ansible.builtin.user:
+    name: "{{ ansible_facts['user_id'] }}"
+    shell: "{{ '/bin/zsh' if ansible_facts['os_family'] == 'Darwin' else '/usr/bin/zsh' }}"
+  become: yes
