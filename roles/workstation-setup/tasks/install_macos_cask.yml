@@ -1,0 +1,12 @@
+---
+- name: Check whether macOS application is already installed
+  stat:
+    path: "{{ workstation_cask.app_path }}"
+  register: workstation_cask_app
+
+- name: Install macOS cask
+  community.general.homebrew_cask:
+    name: "{{ workstation_cask.name }}"
+    state: present
+    path: "{{ workstation_brew_bin }}"
+  when: not workstation_cask_app.stat.exists

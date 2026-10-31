@@ -1,0 +1,8 @@
+---
+
+- name: Install packages with brew (no additional config)
+  homebrew:
+    name: "{{ workstation_shared_packages }}"
+    path: "{{ workstation_brew_bin }}"
+    state: present
+  when: workstation_shared_packages | length > 0

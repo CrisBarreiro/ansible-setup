@@ -8,43 +8,43 @@
 - name: Download pidcat
   git: 
     repo: "https://github.com/JakeWharton/pidcat.git"
-    dest: "{{ ansible_env.HOME }}/.pidcat"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.pidcat"
     accept_hostkey: yes
 
 - name: Link pidcat
   file:
-    src: "{{ ansible_env.HOME }}/.pidcat/pidcat.py"
-    dest: "{{ ansible_env.HOME }}/bin/pidcat"
+    src: "{{ ansible_facts['env']['HOME'] }}/.pidcat/pidcat.py"
+    dest: "{{ ansible_facts['env']['HOME'] }}/bin/pidcat"
     state: link
 
 - name: Download adb-sync
   git: 
     repo: "https://github.com/google/adb-sync.git"
-    dest: "{{ ansible_env.HOME }}/.adb-sync"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.adb-sync"
     accept_hostkey: yes
 
 - name: Link adb-sync
   file:
-    src: "{{ ansible_env.HOME }}/.adb-sync/adb-sync"
-    dest: "{{ ansible_env.HOME }}/bin/adb-sync"
+    src: "{{ ansible_facts['env']['HOME'] }}/.adb-sync/adb-sync"
+    dest: "{{ ansible_facts['env']['HOME'] }}/bin/adb-sync"
     state: link
 
 - name: Create folder for hub 
   file:
-    path: "{{ ansible_env.HOME }}/.hub"
+    path: "{{ ansible_facts['env']['HOME'] }}/.hub"
     state: directory
 
 - name: Download hub
   unarchive:
     src: "https://github.com/github/hub/releases/download/v{{ hub_version }}/hub-linux-amd64-{{ hub_version }}.tgz"
-    dest: "{{ ansible_env.HOME }}/.hub"
-    creates: "{{ ansible_env.HOME }}/.hub/bin/hub"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.hub"
+    creates: "{{ ansible_facts['env']['HOME'] }}/.hub/bin/hub"
     remote_src: yes
     extra_opts: 
       - "--strip-components=1"
   
 - name: Link hub
   file:
-    src: "{{ ansible_env.HOME }}/.hub/bin/hub"
-    dest: "{{ ansible_env.HOME }}/bin/hub"
+    src: "{{ ansible_facts['env']['HOME'] }}/.hub/bin/hub"
+    dest: "{{ ansible_facts['env']['HOME'] }}/bin/hub"
     state: link
