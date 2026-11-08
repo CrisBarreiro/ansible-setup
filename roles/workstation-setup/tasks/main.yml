@@ -37,6 +37,7 @@
 - name: Install macOS packages
   homebrew:
     name:
+      - android-platform-tools
       - bat
       - cmake
       - curl

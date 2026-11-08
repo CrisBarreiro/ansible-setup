@@ -9,6 +9,7 @@
 - name: Install system packages
   apt:
     name:
+      - android-tools-adb
       - build-essential
       - cmake
       - curl
