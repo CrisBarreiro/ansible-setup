@@ -22,6 +22,12 @@ workstation_java_version: "17"
 
 # Homebrew casks are macOS-only.
 workstation_macos_casks:
+  - name: proton-drive
+    app_path: /Applications/Proton Drive.app
+  - name: vivaldi
+    app_path: /Applications/Vivaldi.app
+  - name: chatgpt
+    app_path: /Applications/ChatGPT.app
   - name: iterm2
     app_path: /Applications/iTerm.app
   - name: visual-studio-code
