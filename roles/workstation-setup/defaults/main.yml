@@ -30,6 +30,8 @@ workstation_macos_casks:
     app_path: /Applications/ChatGPT.app
   - name: home-assistant
     app_path: /Applications/Home Assistant.app
+  - name: lm-studio-bionic
+    app_path: /Applications/Bionic.app
   - name: iterm2
     app_path: /Applications/iTerm.app
   - name: visual-studio-code
