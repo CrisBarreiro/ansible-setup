@@ -64,8 +64,8 @@ fi
 
 ansible-playbook "${ansible_options[@]}" -i 'localhost,' playbook.yml
 
-if [ "$platform" = "Darwin" ] && [ "${TERM_PROGRAM:-}" = "iTerm.app" ] && [ ! -f "$HOME/.p10k.zsh" ]; then
-    zsh -ic 'p10k configure'
+if [ "$platform" = "Darwin" ] && [ ! -f "$HOME/.p10k.zsh" ]; then
+    printf '\nSetup is complete. Open a new iTerm2 window, then run ./post-setup.sh to configure Powerlevel10k.\n'
 fi
 
 
