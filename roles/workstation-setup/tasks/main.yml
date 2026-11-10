@@ -74,8 +74,17 @@
     dest: "{{ ansible_facts['env']['HOME'] }}/Library/Application Support/iTerm2/DynamicProfiles/workstation-dropdown.json"
   when: ansible_facts['os_family'] == 'Darwin'
 
+- name: Read the macOS default login shell
+  command: "dscl . -read /Users/{{ ansible_facts['user_id'] }} UserShell"
+  register: workstation_macos_login_shell
+  changed_when: false
+  when: ansible_facts['os_family'] == 'Darwin'
+
 - name: Set zsh as the current user's default shell
   ansible.builtin.user:
     name: "{{ ansible_facts['user_id'] }}"
     shell: "{{ '/bin/zsh' if ansible_facts['os_family'] == 'Darwin' else '/usr/bin/zsh' }}"
   become: yes
+  when: >-
+    ansible_facts['os_family'] != 'Darwin' or
+    workstation_macos_login_shell.stdout != 'UserShell: /bin/zsh'
