@@ -54,6 +54,13 @@
     path: "{{ workstation_brew_bin }}"
   when: ansible_facts['os_family'] == 'Darwin'
 
+- name: Install the Meslo font for Powerlevel10k
+  community.general.homebrew_cask:
+    name: font-meslo-for-powerlevel10k
+    state: present
+    path: "{{ workstation_brew_bin }}"
+  when: ansible_facts['os_family'] == 'Darwin'
+
 - name: Install macOS applications
   include_tasks: install_macos_cask.yml
   loop: "{{ workstation_macos_casks }}"
