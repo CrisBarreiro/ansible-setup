@@ -6,3 +6,25 @@
     path: "{{ workstation_brew_bin }}"
     state: present
   when: workstation_shared_packages | length > 0
+
+- name: Tap the Maestro Homebrew repository
+  community.general.homebrew_tap:
+    name: mobile-dev-inc/tap
+    path: "{{ workstation_brew_bin }}"
+    state: present
+
+- name: Trust the Maestro formula
+  ansible.builtin.command:
+    argv:
+      - "{{ workstation_brew_bin }}/brew"
+      - trust
+      - --formula
+      - mobile-dev-inc/tap/maestro
+  register: workstation_maestro_trust
+  changed_when: "'already trusted' not in (workstation_maestro_trust.stdout | lower)"
+
+- name: Install Maestro with brew
+  homebrew:
+    name: mobile-dev-inc/tap/maestro
+    path: "{{ workstation_brew_bin }}"
+    state: present
