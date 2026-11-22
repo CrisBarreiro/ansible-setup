@@ -1,0 +1,28 @@
+---
+- name: Install code
+  community.general.snap:
+    name: code
+    classic: true
+  become: true
+
+- name: Install gitkraken
+  community.general.snap:
+    name: gitkraken
+  become: true
+
+- name: Install telegram-desktop
+  community.general.snap:
+    name: telegram-desktop
+  become: true
+
+- name: Install slack
+  community.general.snap:
+    name: slack
+    classic: true
+  become: true
+
+- name: Install flutter
+  community.general.snap:
+    name: flutter
+    classic: true
+  become: true

@@ -1,6 +1,6 @@
 ---
 - name: Check whether macOS application is already installed
-  stat:
+  ansible.builtin.stat:
     path: "{{ workstation_cask.app_path }}"
   register: workstation_cask_app
 

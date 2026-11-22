@@ -7,56 +7,59 @@
     state: present
 
 - name: Clone base homeshick repo
-  git: 
+  ansible.builtin.git:
     repo: "{{ homesick_repo }}"
     dest: "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}"
     version: "{{ homesick_repo_version | default(omit, true) }}"
-    accept_hostkey: yes
-    update: no
+    accept_hostkey: true
+    update: false
 
 - name: Configure Antigen to load Powerlevel10k
-  template:
+  ansible.builtin.template:
     src: 01-antigen.zsh.j2
     dest: "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}/home/.zshrc.d/01-antigen.zsh"
+    mode: "0644"
 
 - name: Configure the existing prompt with Powerlevel10k
-  template:
+  ansible.builtin.template:
     src: 00-powerlevel10k.zsh.j2
     dest: "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}/home/.zshrc.d/00-powerlevel10k.zsh"
+    mode: "0644"
 
 - name: Remove the Powerlevel9k configuration from the Homeshick castle
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}/home/.zshrc.d/02-powerlevel9k.zsh"
     state: absent
 
 - name: Link base homeshick repo
-  shell: "{{ workstation_brew_bin }}/homeshick link {{ homesick_castle_name }} -f"
+  ansible.builtin.command: "{{ workstation_brew_bin }}/homeshick link {{ homesick_castle_name }} -f"
   args:
     creates: "{{ ansible_facts['env']['HOME'] }}/.hsh-linked"
 
 - name: Remove the obsolete Powerlevel9k startup link
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_facts['env']['HOME'] }}/.zshrc.d/02-powerlevel9k.zsh"
     state: absent
 
 - name: Link the Powerlevel10k configuration
-  file:
+  ansible.builtin.file:
     src: "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}/home/.zshrc.d/00-powerlevel10k.zsh"
     dest: "{{ ansible_facts['env']['HOME'] }}/.zshrc.d/00-powerlevel10k.zsh"
     state: link
 
 - name: Configure the castle to load generated Powerlevel10k settings
-  template:
+  ansible.builtin.template:
     src: 99-powerlevel10k-config.zsh.j2
     dest: "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}/home/.zshrc.d/99-powerlevel10k-config.zsh"
+    mode: "0644"
 
 - name: Link generated Powerlevel10k settings loader
-  file:
+  ansible.builtin.file:
     src: "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}/home/.zshrc.d/99-powerlevel10k-config.zsh"
     dest: "{{ ansible_facts['env']['HOME'] }}/.zshrc.d/99-powerlevel10k-config.zsh"
     state: link
 
 - name: Remove the installed Powerlevel9k Antigen bundle
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_facts['env']['HOME'] }}/.antigen/bundles/bhilburn/powerlevel9k"
     state: absent

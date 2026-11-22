@@ -1,0 +1,5 @@
+---
+# These are intentional public inputs to the workstation_setup role. Renaming
+# them to add the role prefix would break the documented configuration API.
+skip_list:
+  - var-naming[no-role-prefix]

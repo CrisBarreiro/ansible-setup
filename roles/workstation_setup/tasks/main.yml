@@ -1,44 +1,54 @@
+---
 - name: Set Homebrew paths
-  set_fact:
+  ansible.builtin.set_fact:
     workstation_brew_prefix: "{{ '/opt/homebrew' if ansible_facts['architecture'] == 'arm64' else '/usr/local' }}"
     workstation_brew_bin: "{{ '/opt/homebrew/bin' if ansible_facts['architecture'] == 'arm64' else '/usr/local/bin' }}"
   when: ansible_facts['os_family'] == 'Darwin'
 
 - name: Set Homebrew executable path
-  set_fact:
+  ansible.builtin.set_fact:
     workstation_brew_bin: "{{ '/home/linuxbrew/.linuxbrew/bin' if ansible_facts['os_family'] == 'Debian' else workstation_brew_bin }}"
 
 - name: Provide the Linuxbrew path expected by existing macOS dotfiles
-  file:
+  ansible.builtin.file:
     src: "{{ workstation_brew_prefix }}"
     dest: "{{ ansible_facts['env']['HOME'] }}/.linuxbrew"
     state: link
   when: ansible_facts['os_family'] == 'Darwin'
 
-- include_tasks: sys_packages.yml
+- name: Install Ubuntu system packages
+  ansible.builtin.include_tasks: sys_packages.yml
   when: ansible_facts['distribution'] == 'Ubuntu'
 
-- include_tasks: linuxbrew.yml
+- name: Install Linuxbrew
+  ansible.builtin.include_tasks: linuxbrew.yml
   when: ansible_facts['os_family'] == 'Debian'
 
-- include_tasks: brew_packages.yml
+- name: Install shared Homebrew packages
+  ansible.builtin.include_tasks: brew_packages.yml
 - name: Require a Homeshick repository when dotfiles are enabled
   ansible.builtin.assert:
     that:
       - homesick_repo | length > 0
     fail_msg: "Set homesick_repo to a reachable Homeshick repository when workstation_manage_dotfiles is enabled."
   when: workstation_manage_dotfiles | bool
-- include_tasks: homeshick.yml
+- name: Manage dotfiles with Homeshick
+  ansible.builtin.include_tasks: homeshick.yml
   when: workstation_manage_dotfiles | bool
-- include_tasks: mise.yml
+- name: Configure mise
+  ansible.builtin.include_tasks: mise.yml
 
-- include_tasks: snap.yml
+- name: Install Ubuntu snaps
+  ansible.builtin.include_tasks: snap.yml
   when: ansible_facts['distribution'] == 'Ubuntu'
-- include_tasks: extra_packages.yml
+- name: Install additional Ubuntu tools
+  ansible.builtin.include_tasks: extra_packages.yml
   when: ansible_facts['distribution'] == 'Ubuntu'
-- include_tasks: plasma_packages.yml
+- name: Install Ubuntu Plasma packages
+  ansible.builtin.include_tasks: plasma_packages.yml
   when: ansible_facts['distribution'] == 'Ubuntu'
-- include_tasks: toolbox.yml
+- name: Install Ubuntu JetBrains Toolbox
+  ansible.builtin.include_tasks: toolbox.yml
   when: ansible_facts['distribution'] == 'Ubuntu'
 
 - name: Install macOS packages
@@ -64,7 +74,7 @@
 - name: Check whether the Meslo font for Powerlevel10k is already installed
   ansible.builtin.find:
     paths: "{{ ansible_facts['env']['HOME'] }}/Library/Fonts"
-    patterns: 'MesloLGS NF*.ttf'
+    patterns: "MesloLGS NF*.ttf"
     file_type: file
     recurse: false
   register: workstation_meslo_fonts
@@ -80,7 +90,7 @@
     - workstation_meslo_fonts.matched == 0
 
 - name: Install macOS applications
-  include_tasks: install_macos_cask.yml
+  ansible.builtin.include_tasks: install_macos_cask.yml
   loop: "{{ workstation_macos_casks }}"
   loop_control:
     loop_var: workstation_cask
@@ -88,19 +98,21 @@
   when: ansible_facts['os_family'] == 'Darwin'
 
 - name: Create iTerm2 dynamic profile directory
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_facts['env']['HOME'] }}/Library/Application Support/iTerm2/DynamicProfiles"
     state: directory
+    mode: "0755"
   when: ansible_facts['os_family'] == 'Darwin'
 
 - name: Configure an F12 dropdown window in iTerm2
-  template:
+  ansible.builtin.template:
     src: iterm2-dropdown-profile.json.j2
     dest: "{{ ansible_facts['env']['HOME'] }}/Library/Application Support/iTerm2/DynamicProfiles/workstation-dropdown.json"
+    mode: "0644"
   when: ansible_facts['os_family'] == 'Darwin'
 
 - name: Read the macOS default login shell
-  command: "dscl . -read /Users/{{ ansible_facts['user_id'] }} UserShell"
+  ansible.builtin.command: "dscl . -read /Users/{{ ansible_facts['user_id'] }} UserShell"
   register: workstation_macos_login_shell
   changed_when: false
   when: ansible_facts['os_family'] == 'Darwin'
@@ -109,7 +121,7 @@
   ansible.builtin.user:
     name: "{{ ansible_facts['user_id'] }}"
     shell: "{{ '/bin/zsh' if ansible_facts['os_family'] == 'Darwin' else '/usr/bin/zsh' }}"
-  become: yes
+  become: true
   when: >-
     ansible_facts['os_family'] != 'Darwin' or
     workstation_macos_login_shell.stdout != 'UserShell: /bin/zsh'

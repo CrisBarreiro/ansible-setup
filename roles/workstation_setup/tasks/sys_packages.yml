@@ -1,13 +1,13 @@
 ---
 
 - name: Install aptitude
-  apt: 
+  ansible.builtin.apt:
     name: aptitude
     state: present
-  become: yes
+  become: true
 
 - name: Install system packages
-  apt:
+  ansible.builtin.apt:
     name:
       - android-tools-adb
       - build-essential
@@ -25,7 +25,7 @@
       - libxml2-dev
       - libxslt1-dev
       - libyaml-dev
-      - network-manager-openvpn 
+      - network-manager-openvpn
       - openssl
       - pavucontrol
       - pinentry-curses
@@ -43,5 +43,5 @@
       - zlib1g-dev
       - zsh
     state: present
-  become: yes
+  become: true
   notify: Update and upgrade apt packages
