@@ -10,7 +10,8 @@ homesick_castle_name: "hsh-master"
 homesick_repo_version: ""
 workstation_manage_dotfiles: false
 
-pidcat_version: "9abe4cb72fb863fcfaaa236cd8883892d5ac3192"
+# Stable upstream release tags where available.
+pidcat_version: "2.1.0"
 adb_sync_version: "09e0abf3fc094237380a2ce392e64d2a05420489"
 
 jetbrains_toolbox_version:  "1.16.6067"
