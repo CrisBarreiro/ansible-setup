@@ -18,6 +18,12 @@ The shared Homebrew packages and mise setup run on both platforms. mise installs
 
 Edit `workstation_shared_packages` in `roles/workstation-setup/defaults/main.yml` to choose Homebrew formulae installed on both Ubuntu (through Linuxbrew) and macOS. Maestro is installed separately from the `mobile-dev-inc/tap` repository, with trust limited to its formula. Ubuntu desktop applications are managed through snaps.
 
-Set `workstation_macos_casks` in the same defaults file to choose macOS-only GUI applications installed through Homebrew Cask.
+Set `workstation_macos_casks` in the same defaults file to choose macOS-only GUI applications installed through Homebrew Cask. The checked-in macOS application list is the author's personal, opinionated list; edit it to remove applications you do not want or add your own. Each entry needs a Homebrew cask `name` and the corresponding installed `app_path`, for example:
 
-The default macOS applications installed through Homebrew Cask are iTerm2, Visual Studio Code, JetBrains Toolbox, Raycast, Telegram, Claude, Shottr and WhatsApp.
+```yaml
+workstation_macos_casks:
+  - name: firefox
+    app_path: /Applications/Firefox.app
+```
+
+The default macOS applications installed through Homebrew Cask are the applications listed in `roles/workstation-setup/defaults/main.yml`, including iTerm2, Visual Studio Code, JetBrains Toolbox, Raycast, Telegram, Claude, Shottr and WhatsApp.
