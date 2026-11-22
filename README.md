@@ -4,7 +4,7 @@ Ansible setup for Ubuntu and macOS workstations. Ubuntu uses apt, Linuxbrew and 
 
 ## Requirements
 
-- On macOS, install Xcode Command Line Tools first (`xcode-select --install`).
+- On macOS, Xcode Command Line Tools are required. `setup.sh` starts Apple’s installer automatically if they are missing; complete the system prompt and rerun the script.
 - The supported operating systems are Ubuntu and macOS. The setup has only been tested on current releases of those platforms.
 
 ## Run
