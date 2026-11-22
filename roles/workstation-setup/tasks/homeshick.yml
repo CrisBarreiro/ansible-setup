@@ -1,7 +1,7 @@
 ---
 
 - name: Install homeshick with brew
-  homebrew:
+  community.general.homebrew:
     name: homeshick
     path: "{{ workstation_brew_bin }}"
     state: present

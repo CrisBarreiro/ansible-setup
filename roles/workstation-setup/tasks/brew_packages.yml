@@ -1,7 +1,7 @@
 ---
 
 - name: Install packages with brew (no additional config)
-  homebrew:
+  community.general.homebrew:
     name: "{{ workstation_shared_packages }}"
     path: "{{ workstation_brew_bin }}"
     state: present

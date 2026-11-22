@@ -22,7 +22,14 @@
   when: ansible_facts['os_family'] == 'Debian'
 
 - include_tasks: brew_packages.yml
+- name: Require a Homeshick repository when dotfiles are enabled
+  ansible.builtin.assert:
+    that:
+      - homesick_repo | length > 0
+    fail_msg: "Set homesick_repo to a reachable Homeshick repository when workstation_manage_dotfiles is enabled."
+  when: workstation_manage_dotfiles | bool
 - include_tasks: homeshick.yml
+  when: workstation_manage_dotfiles | bool
 - include_tasks: mise.yml
 
 - include_tasks: snap.yml
@@ -35,7 +42,7 @@
   when: ansible_facts['distribution'] == 'Ubuntu'
 
 - name: Install macOS packages
-  homebrew:
+  community.general.homebrew:
     name:
       - android-platform-tools
       - bat
