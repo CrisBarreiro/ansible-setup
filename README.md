@@ -5,6 +5,7 @@ Ansible setup for Ubuntu and macOS workstations. Ubuntu uses apt, Linuxbrew and 
 ## Requirements
 
 - On macOS, install Xcode Command Line Tools first (`xcode-select --install`).
+- The supported operating systems are Ubuntu and macOS. The setup has only been tested on current releases of those platforms.
 
 ## Run
 
@@ -13,6 +14,24 @@ Ansible setup for Ubuntu and macOS workstations. Ubuntu uses apt, Linuxbrew and 
 3. On macOS, open a new iTerm2 window and run `./post-setup.sh` to configure Powerlevel10k when prompted. Setup installs the required Meslo font before this step.
 
 The script installs Ansible when it is missing (apt on Ubuntu, Homebrew on macOS), installs the required `community.general` Ansible collection, and installs Homebrew on macOS if needed. It asks for the sudo password for package setup and to set zsh as the default shell.
+
+## Dotfiles and Homeshick
+
+Homeshick, also called HSH, manages a repository of personal configuration files (“dotfiles”). This project uses it to install and link files such as `.zshrc` and the shell configuration that loads Antigen and Powerlevel10k. The Homeshick repository is separate from this project because dotfiles are normally personal and may contain machine-specific settings.
+
+Dotfile management is optional. If you answer no, the setup skips cloning and linking a Homeshick repository, but still installs the other configured packages and tools. If you answer yes, enter a reachable Homeshick repository URL. The repository may use HTTPS or SSH; SSH repositories require the appropriate key and access permissions.
+
+## What the setup changes
+
+Running the setup can:
+
+- install system packages, Homebrew/Linuxbrew packages, snaps, and macOS applications;
+- change the current user’s default shell to zsh;
+- add mise activation blocks to `.bashrc` and `.zshrc`;
+- create or update shell configuration and, when enabled, link files from a Homeshick repository;
+- add an iTerm2 dynamic profile on macOS.
+
+Review the defaults before running the setup if you do not want the full package or application list. The script is intended for a personal workstation and does not provide an automatic uninstall or rollback.
 
 The shared Homebrew packages and mise setup run on both platforms. mise installs Java 17 and is activated in zsh and bash. Dotfile management is opt-in; when enabled, the Homeshick setup configures Antigen to load Powerlevel10k and removes the old Powerlevel9k config and bundle, preserving the existing prompt settings. On macOS, setup installs the Meslo font used by Powerlevel10k; run `post-setup.sh` from a new iTerm2 window afterward to start the interactive `p10k configure` wizard. The setup also adds an iTerm2 dropdown profile toggled by F12, and creates `~/.linuxbrew` as a compatibility symlink to Homebrew for existing dotfiles that use `LINUXBREW_PATH`. The setup installs zsh and sets it as the current user's default shell. Snaps, Ubuntu packages, Plasma packages and JetBrains Toolbox desktop integration are Ubuntu-only; JetBrains Toolbox is installed on macOS through Homebrew Cask.
 
@@ -27,3 +46,11 @@ workstation_macos_casks:
 ```
 
 The default macOS applications installed through Homebrew Cask are the applications listed in `roles/workstation-setup/defaults/main.yml`, including iTerm2, Visual Studio Code, JetBrains Toolbox, Raycast, Telegram, Claude, Shottr and WhatsApp.
+
+## Advanced usage
+
+The normal entry point is `./setup.sh`, which bootstraps Ansible and its required collection automatically. If you run `ansible-playbook` directly instead, install the collection first:
+
+```bash
+ansible-galaxy collection install -r requirements.yml
+```
