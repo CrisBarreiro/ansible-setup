@@ -1,6 +1,16 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# Homebrew and several package builds require Apple's Command Line Tools.
+# macOS installs these through a system GUI, so start that installer and ask
+# the user to rerun this script after completing it.
+if [ "$(uname -s)" = "Darwin" ] && ! xcode-select -p >/dev/null 2>&1; then
+    echo "Xcode Command Line Tools are required. Starting Apple's installer..."
+    xcode-select --install >/dev/null 2>&1 || true
+    echo "Complete the installation, then run ./setup.sh again."
+    exit 1
+fi
+
 # Install Homebrew in an interactive shell so its sudo prompt can be answered.
 if [ "$(uname -s)" = "Darwin" ] && ! command -v brew >/dev/null 2>&1; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/c9c975046f78e6e6d662deb801bd461ebd6a54ed/install.sh)"
