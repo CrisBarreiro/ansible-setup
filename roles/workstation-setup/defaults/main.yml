@@ -1,8 +1,9 @@
 ---
 
-bat_version: "0.15.4"
-hub_version: "2.11.2"
-hub_sha256: "7e7a57f5323d3d7d9637cad8ea8f584d7db67e040201d6d88275910f8e235a80"
+bat_version: "0.26.1"
+bat_sha256: "ad59954aa1540e526f97267f60557ea5ef4c7dcf91a0811254134537cb353a3c"
+hub_version: "2.14.2"
+hub_sha256: "74d95fdfb3c78c8af4e2025b04b916ad905ab99a361778500d58269847c7922d"
 
 homesick_repo: ""
 homesick_castle_name: "hsh-master"
@@ -14,7 +15,8 @@ workstation_manage_dotfiles: false
 pidcat_version: "2.1.0"
 adb_sync_version: "09e0abf3fc094237380a2ce392e64d2a05420489"
 
-jetbrains_toolbox_version:  "1.16.6067"
+jetbrains_toolbox_version: "3.8.1.88030"
+jetbrains_toolbox_sha256: "25cbe2ad027f5a5749bf8d8ae7c2215a8665403cfe94ff5d05cd48b25daac345"
 
 # Homebrew formulae installed on both Ubuntu (Linuxbrew) and macOS.
 workstation_shared_packages:
