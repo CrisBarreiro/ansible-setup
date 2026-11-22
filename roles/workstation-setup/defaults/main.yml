@@ -2,10 +2,16 @@
 
 bat_version: "0.15.4"
 hub_version: "2.11.2"
+hub_sha256: "7e7a57f5323d3d7d9637cad8ea8f584d7db67e040201d6d88275910f8e235a80"
 
 homesick_repo: ""
 homesick_castle_name: "hsh-master"
+# Leave empty to use the repository's default branch, or set to a commit/tag.
+homesick_repo_version: ""
 workstation_manage_dotfiles: false
+
+pidcat_version: "9abe4cb72fb863fcfaaa236cd8883892d5ac3192"
+adb_sync_version: "09e0abf3fc094237380a2ce392e64d2a05420489"
 
 jetbrains_toolbox_version:  "1.16.6067"
 

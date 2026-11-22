@@ -9,6 +9,7 @@
   git: 
     repo: "https://github.com/JakeWharton/pidcat.git"
     dest: "{{ ansible_facts['env']['HOME'] }}/.pidcat"
+    version: "{{ pidcat_version }}"
     accept_hostkey: yes
 
 - name: Create the user's local bin directory
@@ -27,6 +28,7 @@
   git: 
     repo: "https://github.com/google/adb-sync.git"
     dest: "{{ ansible_facts['env']['HOME'] }}/.adb-sync"
+    version: "{{ adb_sync_version }}"
     accept_hostkey: yes
 
 - name: Link adb-sync
@@ -40,13 +42,20 @@
     path: "{{ ansible_facts['env']['HOME'] }}/.hub"
     state: directory
 
-- name: Download hub
+- name: Download hub archive
+  get_url:
+    url: "https://github.com/mislav/hub/releases/download/v{{ hub_version }}/hub-linux-amd64-{{ hub_version }}.tgz"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.hub/hub-{{ hub_version }}.tgz"
+    checksum: "sha256:{{ hub_sha256 }}"
+    mode: "0644"
+
+- name: Extract hub
   unarchive:
-    src: "https://github.com/github/hub/releases/download/v{{ hub_version }}/hub-linux-amd64-{{ hub_version }}.tgz"
+    src: "{{ ansible_facts['env']['HOME'] }}/.hub/hub-{{ hub_version }}.tgz"
     dest: "{{ ansible_facts['env']['HOME'] }}/.hub"
     creates: "{{ ansible_facts['env']['HOME'] }}/.hub/bin/hub"
     remote_src: yes
-    extra_opts: 
+    extra_opts:
       - "--strip-components=1"
   
 - name: Link hub

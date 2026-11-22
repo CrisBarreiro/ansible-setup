@@ -10,6 +10,7 @@
   git: 
     repo: "{{ homesick_repo }}"
     dest: "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}"
+    version: "{{ homesick_repo_version | default(omit, true) }}"
     accept_hostkey: yes
     update: no
 
