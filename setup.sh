@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Test whether any SSH public key is present.
-if ! find "$HOME/.ssh" -maxdepth 1 -type f -name '*.pub' -print -quit 2>/dev/null | grep -q .; then
-    echo "SSH Public Key not found"
-    echo "For this setup to work, you need to add a SSH PK and set it up with the homeshick master repo host"
-    echo "Here's a command to create it:"
-    echo "    ssh-keygen -t rsa -b 4096 -C \"your_email@example.com\""
-    exit 1
-fi
-
 # Install Homebrew in an interactive shell so its sudo prompt can be answered.
 if [ "$(uname -s)" = "Darwin" ] && ! command -v brew >/dev/null 2>&1; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+fi
+
+# The Homebrew installer may not update PATH in this shell. Make the standard
+# Intel and Apple Silicon locations available before using brew below.
+if [ "$(uname -s)" = "Darwin" ] && ! command -v brew >/dev/null 2>&1; then
+    for brew_bin in /opt/homebrew/bin /usr/local/bin; do
+        if [ -x "$brew_bin/brew" ]; then
+            export PATH="$brew_bin:$PATH"
+            break
+        fi
+    done
 fi
 
 # Install Ansible when it is not already available.
@@ -37,7 +39,21 @@ if ! command -v ansible-playbook >/dev/null 2>&1; then
     esac
 fi
 
-# Run playbook. Ansible's password prompt is intentionally hidden, so explain it first.
+# Install the collection used by the Homebrew modules.
+ansible-galaxy collection install -r requirements.yml
+
+workstation_manage_dotfiles=false
+homesick_repo=""
+read -r -p "Manage dotfiles with Homeshick? [y/N] " manage_dotfiles_answer
+if [[ "$manage_dotfiles_answer" =~ ^[Yy]([Ee][Ss])?$ ]]; then
+    workstation_manage_dotfiles=true
+    read -r -p "Homeshick repository URL: " homesick_repo
+    if [ -z "$homesick_repo" ]; then
+        echo "A Homeshick repository URL is required when dotfile management is enabled."
+        exit 1
+    fi
+fi
+
 platform="$(uname -s)"
 needs_become=false
 if [ "$platform" = "Linux" ]; then
@@ -46,6 +62,10 @@ elif [ "$(dscl . -read "/Users/$(id -un)" UserShell 2>/dev/null | awk '{print $2
     needs_become=true
 fi
 
+ansible_args=(
+    -i 'localhost,'
+    -e "workstation_manage_dotfiles=$workstation_manage_dotfiles"
+)
 if [ "$needs_become" = true ]; then
     printf '\n============================================================\n'
     printf ' Administrator password required\n'
@@ -56,17 +76,15 @@ if [ "$needs_become" = true ]; then
         printf ' It lets Ansible set zsh as your default login shell.\n'
     fi
     printf '============================================================\n\n'
-    ansible_options=(--ask-become-pass)
+    ansible_args+=(--ask-become-pass)
 else
     printf '\nZsh is already your default login shell; no administrator password is needed.\n\n'
-    ansible_options=()
 fi
-
-ansible-playbook "${ansible_options[@]}" -i 'localhost,' playbook.yml
+if [ -n "$homesick_repo" ]; then
+    ansible_args+=( -e "homesick_repo=$homesick_repo" )
+fi
+ansible-playbook "${ansible_args[@]}" playbook.yml
 
 if [ "$platform" = "Darwin" ] && [ ! -f "$HOME/.p10k.zsh" ]; then
     printf '\nSetup is complete. Open a new iTerm2 window, then run ./post-setup.sh to configure Powerlevel10k.\n'
 fi
-
-
-# sudo cp -r /path/to/ubuntu-setup-ansible/ ansetup && sudo chown -R user:user ansetup && cd ansetup && sudo -K

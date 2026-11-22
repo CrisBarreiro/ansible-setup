@@ -11,6 +11,12 @@
     dest: "{{ ansible_facts['env']['HOME'] }}/.pidcat"
     accept_hostkey: yes
 
+- name: Create the user's local bin directory
+  file:
+    path: "{{ ansible_facts['env']['HOME'] }}/bin"
+    state: directory
+    mode: "0755"
+
 - name: Link pidcat
   file:
     src: "{{ ansible_facts['env']['HOME'] }}/.pidcat/pidcat.py"

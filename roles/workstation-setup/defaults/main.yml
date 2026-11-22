@@ -3,8 +3,9 @@
 bat_version: "0.15.4"
 hub_version: "2.11.2"
 
-homesick_repo: "git@gitlab.com:example-user/hsh-master.git"
+homesick_repo: ""
 homesick_castle_name: "hsh-master"
+workstation_manage_dotfiles: false
 
 jetbrains_toolbox_version:  "1.16.6067"
 
