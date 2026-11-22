@@ -35,17 +35,71 @@ Review the defaults before running the setup if you do not want the full package
 
 The shared Homebrew packages and mise setup run on both platforms. mise installs Java 17 and is activated in zsh and bash. Dotfile management is opt-in; when enabled, the Homeshick setup configures Antigen to load Powerlevel10k and removes the old Powerlevel9k config and bundle, preserving the existing prompt settings. On macOS, setup installs the Meslo font used by Powerlevel10k; run `post-setup.sh` from a new iTerm2 window afterward to start the interactive `p10k configure` wizard. The setup also adds an iTerm2 dropdown profile toggled by F12, and creates `~/.linuxbrew` as a compatibility symlink to Homebrew for existing dotfiles that use `LINUXBREW_PATH`. The setup installs zsh and sets it as the current user's default shell. Snaps, Ubuntu packages, Plasma packages and JetBrains Toolbox desktop integration are Ubuntu-only; JetBrains Toolbox is installed on macOS through Homebrew Cask.
 
-Edit `workstation_shared_packages` in `roles/workstation-setup/defaults/main.yml` to choose Homebrew formulae installed on both Ubuntu (through Linuxbrew) and macOS. Maestro is installed separately from the `mobile-dev-inc/tap` repository, with trust limited to its formula. Ubuntu desktop applications are managed through snaps.
+## What is installed
 
-Set `workstation_macos_casks` in the same defaults file to choose macOS-only GUI applications installed through Homebrew Cask. The checked-in macOS application list is the author's personal, opinionated list; edit it to remove applications you do not want or add your own. Each entry needs a Homebrew cask `name` and the corresponding installed `app_path`, for example:
+The project has a small bootstrap chain:
 
-```yaml
-workstation_macos_casks:
-  - name: firefox
-    app_path: /Applications/Firefox.app
+1. `setup.sh` installs Ansible if it is missing.
+2. Ansible installs the `community.general` collection, which provides the Homebrew and Homebrew Cask modules used by the playbook.
+3. macOS uses Homebrew; Ubuntu uses Linuxbrew. These package managers must exist before their Ansible modules can install formulae.
+4. Ubuntu also uses `apt` and `snap` for system packages and desktop applications.
+
+The setup installs or configures the following by default.
+
+### Both Ubuntu and macOS
+
+Shared Homebrew/Linuxbrew formulae:
+
+- `gcc`, `antigen`, `diff-so-fancy`, `fzf`, `gh`, `mise`, and `scrcpy`;
+- Maestro from the separately tapped and explicitly trusted `mobile-dev-inc/tap` repository;
+- Java 17 through mise;
+- zsh, with the current user’s default shell changed to zsh.
+
+### Ubuntu
+
+- System and development packages from `roles/workstation-setup/tasks/sys_packages.yml`, including Git, Python 3, CMake, OpenSSL, SQLite, ADB, zsh, and build dependencies.
+- Snap applications: Visual Studio Code, GitKraken, Telegram Desktop, Slack, and Flutter.
+- Additional tools: bat, pidcat, adb-sync, and Hub.
+- JetBrains Toolbox and Plasma-related packages.
+
+### macOS
+
+- Homebrew formulae including Android platform tools, bat, CMake, curl, Git, GnuPG, OpenSSL, pinentry, Python, SQLite, unzip, zsh, and Hub.
+- The Meslo font for Powerlevel10k, if it is not already installed.
+- The casks listed in `roles/workstation-setup/defaults/main.yml`: Proton Drive, Vivaldi, ChatGPT, Home Assistant, LM Studio Bionic, iTerm2, Visual Studio Code, JetBrains Toolbox, Raycast, Telegram, Claude, Shottr, and WhatsApp.
+
+## How to change what is installed
+
+The defaults are intentionally easy to edit:
+
+- Add or remove shared formulae in `workstation_shared_packages` in `roles/workstation-setup/defaults/main.yml`.
+- Add or remove macOS applications in `workstation_macos_casks` in the same file. Each item needs the Homebrew cask name and the expected `.app` path.
+- Add or remove Ubuntu snaps in `roles/workstation-setup/tasks/snap.yml`.
+- Add or remove Ubuntu system packages in `roles/workstation-setup/tasks/sys_packages.yml`.
+- Change macOS-only formulae in the `Install macOS packages` task in `roles/workstation-setup/tasks/main.yml`.
+- Change pinned versions and checksums for bat, Hub, and JetBrains Toolbox in `roles/workstation-setup/defaults/main.yml`.
+
+After editing the files, rerun `./setup.sh`. Ansible is idempotent, so already-installed items remain unchanged and newly added items are installed.
+
+## Repository layout
+
+```text
+setup.sh                         Bootstrap Ansible, dependencies, and the playbook
+post-setup.sh                    Optional macOS Powerlevel10k wizard
+playbook.yml                     Local-host playbook entry point
+requirements.yml                 Ansible collection dependencies
+roles/workstation-setup/
+  defaults/main.yml              User-configurable packages, apps, versions, and options
+  tasks/main.yml                 Platform routing and macOS-specific setup
+  tasks/sys_packages.yml         Ubuntu apt packages
+  tasks/snap.yml                 Ubuntu snap applications
+  tasks/extra_packages.yml       Downloaded Ubuntu tools
+  tasks/homeshick.yml            Optional dotfile/Homeshick setup
+  tasks/*.yml                    Linuxbrew, mise, Toolbox, and package setup
+  templates/                     Generated shell, desktop, and iTerm2 configuration
+  handlers/                      Apt update/upgrade handler
+.github/workflows/ci.yml         Bash, Ansible syntax, and ansible-lint checks
 ```
-
-The default macOS applications installed through Homebrew Cask are the applications listed in `roles/workstation-setup/defaults/main.yml`, including iTerm2, Visual Studio Code, JetBrains Toolbox, Raycast, Telegram, Claude, Shottr and WhatsApp.
 
 ## Advanced usage
 
