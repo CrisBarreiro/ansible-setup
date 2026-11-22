@@ -18,7 +18,7 @@
 
 
 - name: Install linuxbrew using script
-  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/b91d2b191196540a8835ea92515b1506e820c17a/install.sh)"
   args:
     executable: /bin/bash
     creates: "{{ linuxbrew_bin_path}}/brew"

@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Install Homebrew in an interactive shell so its sudo prompt can be answered.
 if [ "$(uname -s)" = "Darwin" ] && ! command -v brew >/dev/null 2>&1; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/c9c975046f78e6e6d662deb801bd461ebd6a54ed/install.sh)"
 fi
 
 # The Homebrew installer may not update PATH in this shell. Make the standard
