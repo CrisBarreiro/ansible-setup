@@ -1,17 +1,17 @@
 ---
 
 - name: Add repositories
-  apt_repository:
+  ansible.builtin.apt_repository:
     repo: "{{ item }}"
     state: present
-  become: yes
+  become: true
   loop:
     - ppa:papirus/papirus
 
 - name: Install plasma packages
-  apt:
+  ansible.builtin.apt:
     name:
       - materia-kde
       - yakuake
     state: present
-  become: yes
+  become: true

@@ -1,78 +1,79 @@
 ---
 
 - name: Create the local package cache directory
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_facts['env']['HOME'] }}/.cache/workstation-setup"
     state: directory
     mode: "0755"
 
 - name: Download bat package
-  get_url:
+  ansible.builtin.get_url:
     url: "https://github.com/sharkdp/bat/releases/download/v{{ bat_version }}/bat_{{ bat_version }}_amd64.deb"
     dest: "{{ ansible_facts['env']['HOME'] }}/.cache/workstation-setup/bat_{{ bat_version }}_amd64.deb"
     checksum: "sha256:{{ bat_sha256 }}"
     mode: "0644"
 
 - name: Install bat from GitHub using apt
-  apt:
+  ansible.builtin.apt:
     deb: "{{ ansible_facts['env']['HOME'] }}/.cache/workstation-setup/bat_{{ bat_version }}_amd64.deb"
-  become: yes
+  become: true
 
 - name: Download pidcat
-  git: 
+  ansible.builtin.git:
     repo: "https://github.com/JakeWharton/pidcat.git"
     dest: "{{ ansible_facts['env']['HOME'] }}/.pidcat"
     version: "{{ pidcat_version }}"
-    accept_hostkey: yes
+    accept_hostkey: true
 
 - name: Create the user's local bin directory
-  file:
+  ansible.builtin.file:
     path: "{{ ansible_facts['env']['HOME'] }}/bin"
     state: directory
     mode: "0755"
 
 - name: Link pidcat
-  file:
+  ansible.builtin.file:
     src: "{{ ansible_facts['env']['HOME'] }}/.pidcat/pidcat.py"
     dest: "{{ ansible_facts['env']['HOME'] }}/bin/pidcat"
     state: link
 
 - name: Download adb-sync
-  git: 
+  ansible.builtin.git:
     repo: "https://github.com/google/adb-sync.git"
     dest: "{{ ansible_facts['env']['HOME'] }}/.adb-sync"
     version: "{{ adb_sync_version }}"
-    accept_hostkey: yes
+    accept_hostkey: true
 
 - name: Link adb-sync
-  file:
+  ansible.builtin.file:
     src: "{{ ansible_facts['env']['HOME'] }}/.adb-sync/adb-sync"
     dest: "{{ ansible_facts['env']['HOME'] }}/bin/adb-sync"
     state: link
 
-- name: Create folder for hub 
-  file:
+- name: Create folder for hub
+  ansible.builtin.file:
     path: "{{ ansible_facts['env']['HOME'] }}/.hub"
     state: directory
+    mode: "0755"
 
 - name: Download hub archive
-  get_url:
+  ansible.builtin.get_url:
     url: "https://github.com/mislav/hub/releases/download/v{{ hub_version }}/hub-linux-amd64-{{ hub_version }}.tgz"
     dest: "{{ ansible_facts['env']['HOME'] }}/.hub/hub-{{ hub_version }}.tgz"
     checksum: "sha256:{{ hub_sha256 }}"
     mode: "0644"
 
 - name: Extract hub
-  unarchive:
+  ansible.builtin.unarchive:
     src: "{{ ansible_facts['env']['HOME'] }}/.hub/hub-{{ hub_version }}.tgz"
     dest: "{{ ansible_facts['env']['HOME'] }}/.hub"
     creates: "{{ ansible_facts['env']['HOME'] }}/.hub/bin/hub"
-    remote_src: yes
+    remote_src: true
     extra_opts:
       - "--strip-components=1"
-  
+
 - name: Link hub
-  file:
+  ansible.builtin.file:
     src: "{{ ansible_facts['env']['HOME'] }}/.hub/bin/hub"
     dest: "{{ ansible_facts['env']['HOME'] }}/bin/hub"
     state: link

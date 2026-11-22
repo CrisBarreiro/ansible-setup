@@ -24,7 +24,7 @@
   changed_when: "'already trusted' not in (workstation_maestro_trust.stdout | lower)"
 
 - name: Install Maestro with brew
-  homebrew:
+  community.general.homebrew:
     name: mobile-dev-inc/tap/maestro
     path: "{{ workstation_brew_bin }}"
     state: present

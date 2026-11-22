@@ -1,25 +1,22 @@
 ---
 
 - name: Ensure linuxbrew dependencies are installed
-  apt:
+  ansible.builtin.apt:
     name:
       - build-essential
       - curl
       - file
       - git
     state: present
-  become: yes
+  become: true
 
 - name: Set linuxbrew facts
-  set_fact:
+  ansible.builtin.set_fact:
     linuxbrew_path: "/home/linuxbrew/.linuxbrew"
     linuxbrew_bin_path: "/home/linuxbrew/.linuxbrew/bin"
 
-
-
 - name: Install linuxbrew using script
-  shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/b91d2b191196540a8835ea92515b1506e820c17a/install.sh)"
+  ansible.builtin.shell: sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/b91d2b191196540a8835ea92515b1506e820c17a/install.sh)"
   args:
     executable: /bin/bash
-    creates: "{{ linuxbrew_bin_path}}/brew"
-
+    creates: "{{ linuxbrew_bin_path }}/brew"

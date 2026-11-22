@@ -57,7 +57,7 @@ Shared Homebrew/Linuxbrew formulae:
 
 ### Ubuntu
 
-- System and development packages from `roles/workstation-setup/tasks/sys_packages.yml`, including Git, Python 3, CMake, OpenSSL, SQLite, ADB, zsh, and build dependencies.
+- System and development packages from `roles/workstation_setup/tasks/sys_packages.yml`, including Git, Python 3, CMake, OpenSSL, SQLite, ADB, zsh, and build dependencies.
 - Snap applications: Visual Studio Code, GitKraken, Telegram Desktop, Slack, and Flutter.
 - Additional tools: bat, pidcat, adb-sync, and Hub.
 - JetBrains Toolbox and Plasma-related packages.
@@ -66,18 +66,18 @@ Shared Homebrew/Linuxbrew formulae:
 
 - Homebrew formulae including Android platform tools, bat, CMake, curl, Git, GnuPG, OpenSSL, pinentry, Python, SQLite, unzip, zsh, and Hub.
 - The Meslo font for Powerlevel10k, if it is not already installed.
-- The casks listed in `roles/workstation-setup/defaults/main.yml`: Proton Drive, Vivaldi, ChatGPT, Home Assistant, LM Studio Bionic, iTerm2, Visual Studio Code, JetBrains Toolbox, Raycast, Telegram, Claude, Shottr, and WhatsApp.
+- The casks listed in `roles/workstation_setup/defaults/main.yml`: Proton Drive, Vivaldi, ChatGPT, Home Assistant, LM Studio Bionic, iTerm2, Visual Studio Code, JetBrains Toolbox, Raycast, Telegram, Claude, Shottr, and WhatsApp.
 
 ## How to change what is installed
 
 The defaults are intentionally easy to edit:
 
-- Add or remove shared formulae in `workstation_shared_packages` in `roles/workstation-setup/defaults/main.yml`.
+- Add or remove shared formulae in `workstation_shared_packages` in `roles/workstation_setup/defaults/main.yml`.
 - Add or remove macOS applications in `workstation_macos_casks` in the same file. Each item needs the Homebrew cask name and the expected `.app` path.
-- Add or remove Ubuntu snaps in `roles/workstation-setup/tasks/snap.yml`.
-- Add or remove Ubuntu system packages in `roles/workstation-setup/tasks/sys_packages.yml`.
-- Change macOS-only formulae in the `Install macOS packages` task in `roles/workstation-setup/tasks/main.yml`.
-- Change pinned versions and checksums for bat, Hub, and JetBrains Toolbox in `roles/workstation-setup/defaults/main.yml`.
+- Add or remove Ubuntu snaps in `roles/workstation_setup/tasks/snap.yml`.
+- Add or remove Ubuntu system packages in `roles/workstation_setup/tasks/sys_packages.yml`.
+- Change macOS-only formulae in the `Install macOS packages` task in `roles/workstation_setup/tasks/main.yml`.
+- Change pinned versions and checksums for bat, Hub, and JetBrains Toolbox in `roles/workstation_setup/defaults/main.yml`.
 
 After editing the files, rerun `./setup.sh`. Ansible is idempotent, so already-installed items remain unchanged and newly added items are installed.
 
@@ -88,7 +88,7 @@ setup.sh                         Bootstrap Ansible, dependencies, and the playbo
 post-setup.sh                    Optional macOS Powerlevel10k wizard
 playbook.yml                     Local-host playbook entry point
 requirements.yml                 Ansible collection dependencies
-roles/workstation-setup/
+roles/workstation_setup/
   defaults/main.yml              User-configurable packages, apps, versions, and options
   tasks/main.yml                 Platform routing and macOS-specific setup
   tasks/sys_packages.yml         Ubuntu apt packages
