@@ -62,8 +62,57 @@
       {{ not homeshick_linked_revision_file.stat.exists or
          (homeshick_linked_revision_content.content | default('') | b64decode | trim) != homeshick_castle_revision.stdout | trim }}
 
+- name: Check for the live Herdr mod directory
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/herdr-app/mods"
+  register: herdr_mod_root
+  changed_when: false
+  when: homeshick_link_required | bool
+
+- name: Find existing Herdr mod folder links before Homeshick runs
+  ansible.builtin.find:
+    paths: "{{ ansible_facts['env']['HOME'] }}/.config/herdr-app/mods"
+    recurse: false
+    file_type: link
+  register: herdr_mod_links
+  changed_when: false
+  when:
+    - homeshick_link_required | bool
+    - herdr_mod_root.stat.exists | default(false)
+    - herdr_mod_root.stat.isdir | default(false)
+
+- name: Temporarily remove Herdr mod folder links
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ herdr_mod_links.files | default([]) }}"
+  when: homeshick_link_required | bool
+
 - name: Link base homeshick repo
   ansible.builtin.command: "{{ workstation_brew_bin }}/homeshick link {{ homesick_castle_name }} -f"
+  when: homeshick_link_required | bool
+
+- name: Find Herdr mod folders in the Homeshick castle
+  ansible.builtin.find:
+    paths: "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}/home/.config/herdr-app/mods"
+    recurse: false
+    file_type: directory
+  register: herdr_castle_mods
+  changed_when: false
+
+- name: Restore Herdr mods as folder links
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.config/herdr-app/mods/{{ item.path | basename }}"
+    state: absent
+  loop: "{{ herdr_castle_mods.files | default([]) }}"
+  when: homeshick_link_required | bool
+
+- name: Link each Herdr mod as a folder
+  ansible.builtin.file:
+    src: "{{ item.path }}"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.config/herdr-app/mods/{{ item.path | basename }}"
+    state: link
+  loop: "{{ herdr_castle_mods.files | default([]) }}"
   when: homeshick_link_required | bool
 
 - name: Ensure the Homeshick link state directory exists

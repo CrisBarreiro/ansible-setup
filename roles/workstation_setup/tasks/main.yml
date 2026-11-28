@@ -74,8 +74,14 @@
 - name: Install Claude Code CLI
   ansible.builtin.include_tasks: claude_code.yml
 
+- name: Install Codex CLI
+  ansible.builtin.include_tasks: codex_cli.yml
+
 - name: Install Herdr
   ansible.builtin.include_tasks: herdr.yml
+
+- name: Configure shell startup files
+  ansible.builtin.include_tasks: shell_config.yml
 
 - name: Check whether the Meslo font for Powerlevel10k is already installed
   ansible.builtin.find:

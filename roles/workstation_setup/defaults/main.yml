@@ -27,6 +27,7 @@ workstation_shared_packages:
   - fzf
   - gh
   - mise
+  - node
   - scrcpy
 
 workstation_java_version: "17"

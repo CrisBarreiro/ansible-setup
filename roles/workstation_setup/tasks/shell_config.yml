@@ -1,0 +1,99 @@
+---
+- name: Remove legacy Ansible blocks from the zsh entrypoint
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
+    marker: "{{ item.marker }}"
+    state: absent
+  loop:
+    - marker: "# {mark} ANSIBLE MANAGED MISE"
+    - marker: "# {mark} ANSIBLE MANAGED CLAUDE CODE"
+    - marker: "# {mark} ANSIBLE MANAGED CODEX CLI"
+    - marker: "# {mark} ANSIBLE MANAGED LOCAL BIN PATH"
+
+- name: Remove legacy Ansible blocks from bash
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
+    marker: "{{ item.marker }}"
+    state: absent
+  loop:
+    - marker: "# {mark} ANSIBLE MANAGED MISE"
+    - marker: "# {mark} ANSIBLE MANAGED CLAUDE CODE"
+    - marker: "# {mark} ANSIBLE MANAGED CODEX CLI"
+    - marker: "# {mark} ANSIBLE MANAGED LOCAL BIN PATH"
+
+- name: Check for the Homeshick zsh local-path fragment
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc.d/20-local-paths.zsh"
+  register: workstation_zsh_local_paths_file
+  changed_when: false
+  when: workstation_manage_dotfiles | bool
+
+- name: Read the Homeshick zsh local-path fragment
+  ansible.builtin.slurp:
+    src: "{{ ansible_facts['env']['HOME'] }}/.zshrc.d/20-local-paths.zsh"
+  register: workstation_zsh_local_paths_content
+  changed_when: false
+  when:
+    - workstation_manage_dotfiles | bool
+    - workstation_zsh_local_paths_file.stat.exists
+
+- name: Activate mise in the Homeshick zsh fragments
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc.d/10-mise.zsh"
+    create: true
+    mode: "0644"
+    marker: "# {mark} ANSIBLE MANAGED MISE"
+    block: |
+      eval "$({{ workstation_brew_bin }}/mise activate zsh)"
+  when: workstation_manage_dotfiles | bool
+
+- name: Add the local bin directory to the Homeshick zsh PATH
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc.d/20-local-paths.zsh"
+    create: true
+    mode: "0644"
+    marker: "# {mark} ANSIBLE MANAGED LOCAL BIN PATH"
+    block: |
+      export PATH="$HOME/.local/bin:$PATH"
+  when:
+    - workstation_manage_dotfiles | bool
+    - not workstation_zsh_local_paths_file.stat.exists or
+      '$HOME/.local/bin' not in (workstation_zsh_local_paths_content.content | default('') | b64decode)
+
+- name: Activate mise directly in zsh without managed dotfiles
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
+    create: true
+    mode: "0644"
+    marker: "# {mark} ANSIBLE MANAGED MISE"
+    block: |
+      eval "$({{ workstation_brew_bin }}/mise activate zsh)"
+  when: not workstation_manage_dotfiles | bool
+
+- name: Add the local bin directory directly to zsh without managed dotfiles
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
+    create: true
+    mode: "0644"
+    marker: "# {mark} ANSIBLE MANAGED LOCAL BIN PATH"
+    block: |
+      export PATH="$HOME/.local/bin:$PATH"
+  when: not workstation_manage_dotfiles | bool
+
+- name: Activate mise in bash
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
+    create: true
+    mode: "0644"
+    marker: "# {mark} ANSIBLE MANAGED MISE"
+    block: |
+      eval "$({{ workstation_brew_bin }}/mise activate bash)"
+
+- name: Add the local bin directory to bash PATH
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
+    create: true
+    mode: "0644"
+    marker: "# {mark} ANSIBLE MANAGED LOCAL BIN PATH"
+    block: |
+      export PATH="$HOME/.local/bin:$PATH"

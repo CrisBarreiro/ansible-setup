@@ -1,0 +1,15 @@
+---
+- name: Install Codex CLI
+  ansible.builtin.command:
+    argv:
+      - "{{ workstation_brew_bin }}/npm"
+      - install
+      - --global
+      - --prefix
+      - "{{ ansible_facts['env']['HOME'] }}/.local"
+      - "@openai/codex@latest"
+  args:
+    creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/codex"
+  environment:
+    HOME: "{{ ansible_facts['env']['HOME'] }}"
+

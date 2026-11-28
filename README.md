@@ -54,6 +54,7 @@ Shared Homebrew/Linuxbrew formulae:
 - Maestro from the separately tapped and explicitly trusted `mobile-dev-inc/tap` repository;
 - Java 17 through mise;
 - Claude Code CLI through Anthropic's native installer (`claude`), on Ubuntu and macOS;
+- Codex CLI through npm (`codex`), on Ubuntu and macOS;
 - Herdr through its native installer (`herdr`), on Ubuntu and macOS;
 - zsh, with the current user’s default shell changed to zsh.
 

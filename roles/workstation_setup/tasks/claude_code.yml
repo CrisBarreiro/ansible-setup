@@ -22,21 +22,3 @@
   ansible.builtin.file:
     path: /tmp/claude-code-install.sh
     state: absent
-
-- name: Add Claude Code to the zsh PATH
-  ansible.builtin.blockinfile:
-    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
-    create: true
-    mode: "0644"
-    marker: "# {mark} ANSIBLE MANAGED CLAUDE CODE"
-    block: |
-      export PATH="$HOME/.local/bin:$PATH"
-
-- name: Add Claude Code to the bash PATH
-  ansible.builtin.blockinfile:
-    path: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
-    create: true
-    mode: "0644"
-    marker: "# {mark} ANSIBLE MANAGED CLAUDE CODE"
-    block: |
-      export PATH="$HOME/.local/bin:$PATH"

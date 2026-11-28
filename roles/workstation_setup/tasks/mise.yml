@@ -3,21 +3,3 @@
   ansible.builtin.command: "{{ workstation_brew_bin }}/mise use --global java@{{ workstation_java_version }}"
   register: mise_java_install
   changed_when: false
-
-- name: Activate mise in zsh
-  ansible.builtin.blockinfile:
-    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
-    create: true
-    mode: "0644"
-    marker: "# {mark} ANSIBLE MANAGED MISE"
-    block: |
-      eval "$({{ workstation_brew_bin }}/mise activate zsh)"
-
-- name: Activate mise in bash
-  ansible.builtin.blockinfile:
-    path: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
-    create: true
-    mode: "0644"
-    marker: "# {mark} ANSIBLE MANAGED MISE"
-    block: |
-      eval "$({{ workstation_brew_bin }}/mise activate bash)"
