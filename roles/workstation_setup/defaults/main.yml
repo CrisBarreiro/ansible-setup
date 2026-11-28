@@ -10,6 +10,7 @@ homesick_castle_name: "hsh-master"
 # Leave empty to use the repository's default branch, or set to a commit/tag.
 homesick_repo_version: ""
 workstation_manage_dotfiles: false
+workstation_homeshick_repo_already_configured: false
 
 # Stable upstream release tags where available.
 pidcat_version: "2.1.0"

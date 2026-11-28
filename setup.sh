@@ -50,17 +50,30 @@ if ! command -v ansible-playbook >/dev/null 2>&1; then
 fi
 
 # Install the collection used by the Homebrew modules.
-ansible-galaxy collection install -r requirements.yml
+collection_install_log="$(mktemp)"
+if ! ansible-galaxy collection install -r requirements.yml >"$collection_install_log" 2>&1; then
+    cat "$collection_install_log"
+    rm -f "$collection_install_log"
+    exit 1
+fi
+rm -f "$collection_install_log"
 
 workstation_manage_dotfiles=false
 homesick_repo=""
+homesick_repo_already_configured=false
 read -r -p "Manage dotfiles with Homeshick? [y/N] " manage_dotfiles_answer
 if [[ "$manage_dotfiles_answer" =~ ^[Yy]([Ee][Ss])?$ ]]; then
     workstation_manage_dotfiles=true
-    read -r -p "Homeshick repository URL: " homesick_repo
-    if [ -z "$homesick_repo" ]; then
-        echo "A Homeshick repository URL is required when dotfile management is enabled."
-        exit 1
+    homesick_repo_path="$HOME/.homesick/repos/hsh-master"
+    if [ -d "$homesick_repo_path" ] || [ -f "$HOME/.hsh-linked" ]; then
+        homesick_repo_already_configured=true
+        echo "Existing Homeshick setup detected; reusing it."
+    else
+        read -r -p "Homeshick repository URL: " homesick_repo
+        if [ -z "$homesick_repo" ]; then
+            echo "A Homeshick repository URL is required when dotfile management is enabled."
+            exit 1
+        fi
     fi
 fi
 
@@ -75,6 +88,7 @@ fi
 ansible_args=(
     -i 'localhost,'
     -e "workstation_manage_dotfiles=$workstation_manage_dotfiles"
+    -e "workstation_homeshick_repo_already_configured=$homesick_repo_already_configured"
 )
 if [ "$needs_become" = true ]; then
     printf '\n============================================================\n'

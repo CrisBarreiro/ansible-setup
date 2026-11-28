@@ -1,0 +1,42 @@
+---
+- name: Ensure the Claude Code launcher directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.local/bin"
+    state: directory
+    mode: "0755"
+
+- name: Download the Claude Code installer
+  ansible.builtin.get_url:
+    url: https://claude.ai/install.sh
+    dest: /tmp/claude-code-install.sh
+    mode: "0755"
+
+- name: Install Claude Code CLI
+  ansible.builtin.command: /bin/bash /tmp/claude-code-install.sh
+  args:
+    creates: "{{ ansible_facts['env']['HOME'] }}/.local/bin/claude"
+  environment:
+    HOME: "{{ ansible_facts['env']['HOME'] }}"
+
+- name: Remove the Claude Code installer
+  ansible.builtin.file:
+    path: /tmp/claude-code-install.sh
+    state: absent
+
+- name: Add Claude Code to the zsh PATH
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.zshrc"
+    create: true
+    mode: "0644"
+    marker: "# {mark} ANSIBLE MANAGED CLAUDE CODE"
+    block: |
+      export PATH="$HOME/.local/bin:$PATH"
+
+- name: Add Claude Code to the bash PATH
+  ansible.builtin.blockinfile:
+    path: "{{ ansible_facts['env']['HOME'] }}/.bashrc"
+    create: true
+    mode: "0644"
+    marker: "# {mark} ANSIBLE MANAGED CLAUDE CODE"
+    block: |
+      export PATH="$HOME/.local/bin:$PATH"

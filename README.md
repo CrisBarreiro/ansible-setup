@@ -19,7 +19,7 @@ The script installs Ansible when it is missing (apt on Ubuntu, Homebrew on macOS
 
 Homeshick, also called HSH, manages a repository of personal configuration files (“dotfiles”). This project uses it to install and link files such as `.zshrc` and the shell configuration that loads Antigen and Powerlevel10k. The Homeshick repository is separate from this project because dotfiles are normally personal and may contain machine-specific settings.
 
-Dotfile management is optional. If you answer no, the setup skips cloning and linking a Homeshick repository, but still installs the other configured packages and tools. If you answer yes, enter a reachable Homeshick repository URL. The repository may use HTTPS or SSH; SSH repositories require the appropriate key and access permissions.
+Dotfile management is optional. If you answer no, the setup skips cloning and linking a Homeshick repository, but still installs the other configured packages and tools. If you answer yes, enter a reachable Homeshick repository URL. When the default Homeshick castle or its link marker already exists, setup reuses it without asking for the URL again. The repository may use HTTPS or SSH; SSH repositories require the appropriate key and access permissions.
 
 ## What the setup changes
 
@@ -53,6 +53,8 @@ Shared Homebrew/Linuxbrew formulae:
 - `gcc`, `antigen`, `diff-so-fancy`, `fzf`, `gh`, `mise`, and `scrcpy`;
 - Maestro from the separately tapped and explicitly trusted `mobile-dev-inc/tap` repository;
 - Java 17 through mise;
+- Claude Code CLI through Anthropic's native installer (`claude`), on Ubuntu and macOS;
+- Herdr through its native installer (`herdr`), on Ubuntu and macOS;
 - zsh, with the current user’s default shell changed to zsh.
 
 ### Ubuntu

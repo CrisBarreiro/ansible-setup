@@ -29,8 +29,8 @@
 - name: Require a Homeshick repository when dotfiles are enabled
   ansible.builtin.assert:
     that:
-      - homesick_repo | length > 0
-    fail_msg: "Set homesick_repo to a reachable Homeshick repository when workstation_manage_dotfiles is enabled."
+      - homesick_repo | length > 0 or workstation_homeshick_repo_already_configured | bool
+    fail_msg: "Set homesick_repo to a reachable Homeshick repository when workstation_manage_dotfiles is enabled, unless an existing Homeshick setup was detected."
   when: workstation_manage_dotfiles | bool
 - name: Manage dotfiles with Homeshick
   ansible.builtin.include_tasks: homeshick.yml
@@ -70,6 +70,12 @@
     state: present
     path: "{{ workstation_brew_bin }}"
   when: ansible_facts['os_family'] == 'Darwin'
+
+- name: Install Claude Code CLI
+  ansible.builtin.include_tasks: claude_code.yml
+
+- name: Install Herdr
+  ansible.builtin.include_tasks: herdr.yml
 
 - name: Check whether the Meslo font for Powerlevel10k is already installed
   ansible.builtin.find:

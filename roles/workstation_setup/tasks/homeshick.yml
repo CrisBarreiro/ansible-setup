@@ -13,6 +13,7 @@
     version: "{{ homesick_repo_version | default(omit, true) }}"
     accept_hostkey: true
     update: false
+  when: not workstation_homeshick_repo_already_configured | bool
 
 - name: Configure Antigen to load Powerlevel10k
   ansible.builtin.template:
@@ -31,10 +32,52 @@
     path: "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}/home/.zshrc.d/02-powerlevel9k.zsh"
     state: absent
 
+- name: Read the current Homeshick castle revision
+  ansible.builtin.command:
+    argv:
+      - git
+      - -C
+      - "{{ ansible_facts['env']['HOME'] }}/.homesick/repos/{{ homesick_castle_name }}"
+      - rev-parse
+      - HEAD
+  register: homeshick_castle_revision
+  changed_when: false
+
+- name: Check for the last linked Homeshick castle revision
+  ansible.builtin.stat:
+    path: "{{ ansible_facts['env']['HOME'] }}/.cache/homeshick/{{ homesick_castle_name }}.linked-revision"
+  register: homeshick_linked_revision_file
+  changed_when: false
+
+- name: Read the last linked Homeshick castle revision
+  ansible.builtin.slurp:
+    src: "{{ ansible_facts['env']['HOME'] }}/.cache/homeshick/{{ homesick_castle_name }}.linked-revision"
+  register: homeshick_linked_revision_content
+  when: homeshick_linked_revision_file.stat.exists
+  changed_when: false
+
+- name: Decide whether the Homeshick castle needs linking
+  ansible.builtin.set_fact:
+    homeshick_link_required: >-
+      {{ not homeshick_linked_revision_file.stat.exists or
+         (homeshick_linked_revision_content.content | default('') | b64decode | trim) != homeshick_castle_revision.stdout | trim }}
+
 - name: Link base homeshick repo
   ansible.builtin.command: "{{ workstation_brew_bin }}/homeshick link {{ homesick_castle_name }} -f"
-  args:
-    creates: "{{ ansible_facts['env']['HOME'] }}/.hsh-linked"
+  when: homeshick_link_required | bool
+
+- name: Ensure the Homeshick link state directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_facts['env']['HOME'] }}/.cache/homeshick"
+    state: directory
+    mode: "0755"
+
+- name: Record the linked Homeshick castle revision
+  ansible.builtin.copy:
+    content: "{{ homeshick_castle_revision.stdout | trim }}\n"
+    dest: "{{ ansible_facts['env']['HOME'] }}/.cache/homeshick/{{ homesick_castle_name }}.linked-revision"
+    mode: "0644"
+  when: homeshick_link_required | bool
 
 - name: Remove the obsolete Powerlevel9k startup link
   ansible.builtin.file:
